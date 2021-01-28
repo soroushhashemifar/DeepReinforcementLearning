@@ -35,7 +35,7 @@ class DeepQLearningMethod(LearningMethod):
   Dueling: https://arxiv.org/pdf/1511.06581
   """
 
-  def __init__(self, state_dimension, memory, policy, model, gamma=0.01, dueling=False):
+  def __init__(self, state_dimension, memory, policy, model, gamma=0.01, dueling=None):
     self.memory = memory
     self.policy = policy
     self.gamma = gamma
@@ -46,9 +46,32 @@ class DeepQLearningMethod(LearningMethod):
     self.val_loss = []
     self.val_mae = []
 
-    if dueling:
-      pass
+    if dueling is not None:
+      # get the second last layer of the model, abandon the last layer
+      layer = self.model.layers[-2]
+      
+      nb_action = self.model.output.shape[-1]
 
+      # layer y has a shape (nb_action+1,)
+      # y[:,0] represents V(s;theta)
+      # y[:,1:] represents A(s,a;theta)
+      y = tf.keras.layers.Dense(nb_action + 1, activation='linear')(layer.output)
+      
+      # avg dueling: Q(s,a;theta) = V(s;theta) + (A(s,a;theta)-Avg_a(A(s,a;theta)))
+      # max dueling: Q(s,a;theta) = V(s;theta) + (A(s,a;theta)-max_a(A(s,a;theta)))
+      # naive dueling: Q(s,a;theta) = V(s;theta) + A(s,a;theta)
+      if dueling == 'avg':
+          outputlayer = tf.keras.layers.Lambda(lambda a: tf.keras.backend.expand_dims(a[:, 0], -1) + a[:, 1:] - tf.keras.backend.mean(a[:, 1:], axis=1, keepdims=True), output_shape=(nb_action,))(y)
+      elif dueling == 'max':
+          outputlayer = tf.keras.layers.Lambda(lambda a: tf.keras.backend.expand_dims(a[:, 0], -1) + a[:, 1:] - tf.keras.backend.max(a[:, 1:], axis=1, keepdims=True), output_shape=(nb_action,))(y)
+      elif dueling == 'naive':
+          outputlayer = tf.keras.layers.Lambda(lambda a: tf.keras.backend.expand_dims(a[:, 0], -1) + a[:, 1:], output_shape=(nb_action,))(y)
+
+      self.model = Model(inputs=self.model.input, outputs=outputlayer)
+      self.model.compile(optimizer=tf.keras.optimizers.Nadam(lr=0.00001), 
+                          loss=tf.keras.losses.MeanSquaredError(), 
+                          metrics=["mae"])
+      
   def select_action(self, current_state, step, test_phase=False):
     action_q_vals = self.model.predict(current_state)
     action_q_vals = np.squeeze(action_q_vals)
@@ -93,7 +116,7 @@ class DoubleDeepQLearningMethod(LearningMethod):
   Dueling: https://arxiv.org/pdf/1511.06581
   """
 
-  def __init__(self, state_dimension, memory, policy, model, target_update_interval=1000, gamma=0.01, dueling=False):
+  def __init__(self, state_dimension, memory, policy, model, target_update_interval=1000, gamma=0.01, dueling=None):
     self.memory = memory
     self.policy = policy
     self.gamma = gamma
@@ -108,8 +131,31 @@ class DoubleDeepQLearningMethod(LearningMethod):
 
     # self.plot = PlotLearning()  
 
-    if dueling:
-      pass  
+    if dueling is not None:
+      # get the second last layer of the model, abandon the last layer
+      layer = self.local_model.layers[-2]
+      
+      nb_action = self.local_model.output.shape[-1]
+
+      # layer y has a shape (nb_action+1,)
+      # y[:,0] represents V(s;theta)
+      # y[:,1:] represents A(s,a;theta)
+      y = tf.keras.layers.Dense(nb_action + 1, activation='linear')(layer.output)
+      
+      # avg dueling: Q(s,a;theta) = V(s;theta) + (A(s,a;theta)-Avg_a(A(s,a;theta)))
+      # max dueling: Q(s,a;theta) = V(s;theta) + (A(s,a;theta)-max_a(A(s,a;theta)))
+      # naive dueling: Q(s,a;theta) = V(s;theta) + A(s,a;theta)
+      if dueling == 'avg':
+          outputlayer = tf.keras.layers.Lambda(lambda a: tf.keras.backend.expand_dims(a[:, 0], -1) + a[:, 1:] - tf.keras.backend.mean(a[:, 1:], axis=1, keepdims=True), output_shape=(nb_action,))(y)
+      elif dueling == 'max':
+          outputlayer = tf.keras.layers.Lambda(lambda a: tf.keras.backend.expand_dims(a[:, 0], -1) + a[:, 1:] - tf.keras.backend.max(a[:, 1:], axis=1, keepdims=True), output_shape=(nb_action,))(y)
+      elif dueling == 'naive':
+          outputlayer = tf.keras.layers.Lambda(lambda a: tf.keras.backend.expand_dims(a[:, 0], -1) + a[:, 1:], output_shape=(nb_action,))(y)
+
+      self.local_model = tf.keras.models.Model(inputs=self.local_model.input, outputs=outputlayer)
+      self.local_model.compile(optimizer=tf.keras.optimizers.Nadam(lr=0.00001), 
+                                loss=tf.keras.losses.MeanSquaredError(), 
+                                metrics=["mae"])  
 
     self.target_model = tf.keras.models.clone_model(self.local_model)
     self.target_model.build((state_dimension,))
