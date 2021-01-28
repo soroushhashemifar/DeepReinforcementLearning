@@ -1,10 +1,10 @@
 from agents import *
 
-def run_simulation_dqn(episodes, batch_size, environment, model, memory, policy, init_reward=0, target_update_interval=1000, gamma=0.99):
+def run_simulation_dqn(episodes, batch_size, environment, model, memory, policy, init_reward=0, target_update_interval=1000, gamma=0.99, dueling=None):
   if target_update_interval is None:
-    method = DeepQLearningMethod(environment.observation_space.shape[0], memory, policy, model, gamma=gamma)
+    method = DeepQLearningMethod(environment.observation_space.shape[0], memory, policy, model, gamma=gamma, dueling=dueling)
   else:
-    method = DoubleDeepQLearningMethod(environment.observation_space.shape[0], memory, policy, model, target_update_interval=target_update_interval, gamma=gamma)
+    method = DoubleDeepQLearningMethod(environment.observation_space.shape[0], memory, policy, model, target_update_interval=target_update_interval, gamma=gamma, dueling=dueling)
 
   total_steps = 0
   for episode in range(1, episodes):
@@ -37,11 +37,11 @@ def run_simulation_dqn(episodes, batch_size, environment, model, memory, policy,
   env.close()
 
 
-def run_simulation_sarsa(episodes, batch_size, environment, model, memory, policy, init_reward=0, target_update_interval=1000, gamma=0.99):
+def run_simulation_sarsa(episodes, batch_size, environment, model, memory, policy, init_reward=0, target_update_interval=1000, gamma=0.99, dueling=None):
   if target_update_interval is None:
-    method = SARSALearningMethod(environment.observation_space.shape[0], memory, policy, model, gamma=gamma)
+    method = SARSALearningMethod(environment.observation_space.shape[0], memory, policy, model, gamma=gamma, dueling=dueling)
   else:
-    method = DoubleSARSALearningMethod(environment.observation_space.shape[0], memory, policy, model, target_update_interval=target_update_interval, gamma=gamma)
+    method = DoubleSARSALearningMethod(environment.observation_space.shape[0], memory, policy, model, target_update_interval=target_update_interval, gamma=gamma, dueling=dueling)
 
   total_steps = 0
   for episode in range(1, episodes):
