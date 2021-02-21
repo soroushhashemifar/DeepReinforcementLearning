@@ -1,12 +1,12 @@
 # Deep-Reinforcement-Algorithms-for-playing-games
 
-Available agents:
+## Available agents:
 - Deep Q Network (with dueling)
 - Double Deep Q Network (with dueling)
 - Deep SARSA (with dueling)
 - Double Deep SARSA (with dueling)
 
-References:
+## References:
 
 [1] Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Alex Graves, Ioannis Antonoglou, Daan Wierstra, and Martin Riedmiller, Playing Atari with Deep Reinforcement Learning, NIPS Deep Learning Workshop 2013
 
