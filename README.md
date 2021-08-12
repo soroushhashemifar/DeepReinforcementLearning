@@ -1,4 +1,4 @@
-# Deep-Reinforcement-Algorithms-for-playing-games
+# DeepReinforcementLearning
 
 ## Available agents:
 - Deep Q Network (with dueling)
