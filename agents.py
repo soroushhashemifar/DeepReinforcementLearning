@@ -1,3 +1,7 @@
+import numpy as np
+import tensorflow as tf
+
+
 class LearningMethod:
 
   def select_action(self, current_state, step, test_phase=False):
