@@ -1,3 +1,8 @@
+import tensorflow as tf
+import matplotlib.pyplot as plt
+from collections import deque
+
+
 class PlotLearning(tf.keras.callbacks.Callback):
     def on_train_begin(self, logs={}):
         self.i = 0
