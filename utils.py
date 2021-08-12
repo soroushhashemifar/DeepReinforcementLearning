@@ -1,6 +1,7 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from collections import deque
+import random
 
 
 class PlotLearning(tf.keras.callbacks.Callback):
