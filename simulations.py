@@ -1,4 +1,6 @@
 from agents import *
+import numpy as np
+
 
 def run_simulation_dqn(episodes, batch_size, environment, model, memory, policy, init_reward=0, target_update_interval=1000, gamma=0.99, dueling=None):
   if target_update_interval is None:
