@@ -1,6 +1,8 @@
 from utils import *
 from policies import *
-import simulations import *
+from simulations import *
+import tensorflow as tf
+
 
 def get_model(input_shape, output_shape):
   input_layer = tf.keras.layers.Input(shape=input_shape)
