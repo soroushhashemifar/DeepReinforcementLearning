@@ -2,6 +2,7 @@ from utils import *
 from policies import *
 from simulations import *
 import tensorflow as tf
+import gym
 
 
 def get_model(input_shape, output_shape):
