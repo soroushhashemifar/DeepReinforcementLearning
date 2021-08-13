@@ -76,4 +76,4 @@ def run_simulation_sarsa(episodes, batch_size, environment, model, memory, polic
       # print("episode", episode, "episode reward", episode_reward, "steps per episode", steps, "epsilon", method.policy.epsilon, "mean loss", np.mean(method.loss), "mean mae", np.mean(method.mae))
       print("episode", episode, "| episode reward", episode_reward, "| steps per episode", steps, "| total steps", total_steps, "| mean loss", np.mean(method.loss), "| mean mae", np.mean(method.mae), "| mean val_loss", np.mean(method.val_loss), "| mean val_mae", np.mean(method.val_mae))
 
-  env.close()
+  environment.close()
