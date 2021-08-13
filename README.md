@@ -19,6 +19,7 @@ This framework is tested to work under Python 3.7. The required dependencies are
 - Advantage Actor Critic (A2C)
 - Asynchronous Advantage Actor Critic (A3C)
 - Deep Deterministic Policy Gradient (DDPG)
+- Prioritized Experience Replay technique
 
 ## References
 
