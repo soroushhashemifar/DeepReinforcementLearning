@@ -1,12 +1,26 @@
-# DeepReinforcementLearning
+# DeepReinforcementLearning (DeepRL)
 
-## Available agents:
+DeepRL is a python framework for Deep Reinforcement Learning. It is build with modularity in mind so that it can easily be adapted to any need. It provides many possibilities out of the box such as Simple/Double Q-learning and Simple/Double SARSA. Many Open-AI environment examples are also compatible with the framework.
+
+## Dependencies
+
+This framework is tested to work under Python 3.7. The required dependencies are NumPy >= 1.19 and Tensorflow >= 2.3.
+
+## Available agents
+
 - Deep Q Network (with dueling)
 - Double Deep Q Network (with dueling)
 - Deep SARSA (with dueling)
 - Double Deep SARSA (with dueling)
 
-## References:
+## TODO
+
+- Actor-Critic
+- Advantage Actor Critic (A2C)
+- Asynchronous Advantage Actor Critic (A3C)
+- Deep Deterministic Policy Gradient (DDPG)
+
+## References
 
 [1] Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Alex Graves, Ioannis Antonoglou, Daan Wierstra, and Martin Riedmiller, Playing Atari with Deep Reinforcement Learning, NIPS Deep Learning Workshop 2013
 
